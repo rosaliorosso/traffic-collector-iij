@@ -209,6 +209,7 @@ class ChromeBrowswer:
         if not os.path.exists(file_path):
           os.makedirs(file_path)
 
+        # PNGダウンロード
         with open(filename, 'wb') as f:
            f.write(bytes(response.content))
 
@@ -244,16 +245,17 @@ class ChromeBrowswer:
         if not os.path.exists(file_path):
           os.makedirs(file_path)
 
+        # PNGダウンロード
         with open(filename, 'wb') as f:
            f.write(bytes(data_bytes))
-
+        
         compFile = zipfile.ZipFile( filename.replace(".csv", ".zip"), 'w', zipfile.ZIP_DEFLATED )
         compFile.write( filename )
         compFile.close()
         os.remove( filename )
 
         self.driver.back()
-        
+
     def close(self):
         self.driver.quit()
         if self.proxyenable:
@@ -267,8 +269,8 @@ if __name__ == "__main__":
     end_date = parse_args['end_date']
 
     # システム情報/ユーザ情報読み込み
-    logininfo = json.load(open("settings/login.json", "r"))
-    nodeinfo = json.load(open("settings/node.json", "r"))
+    logininfo = json.load(open("settings/login.json", "r", encoding='utf-8'))
+    nodeinfo  = json.load(open("settings/node.json", "r", encoding='utf-8'))
  
     # proxy情報読み込み
     proxyinfo = {}
@@ -277,8 +279,10 @@ if __name__ == "__main__":
         proxyinfo = json.load(open("settings/proxy.json", "r"))
         proxyinfo['PROXY_ENABLE'] = True
 
-    # IIJ Service Onlineにログイン
+    # ブラウザ開始
     cb = ChromeBrowswer( proxyinfo )
+
+    # サイトログイン
     cb.login( logininfo )
 
     for nodeinfo in nodeinfo["nodelist"]:
@@ -289,14 +293,14 @@ if __name__ == "__main__":
             pngfile = start_date.replace("/", "") + "-" + end_date.replace("/", "") + "_" + nodeinfo["servicecode"] + ".png"
             csvfile = start_date.replace("/", "") + "-" + end_date.replace("/", "") + "_" + nodeinfo["servicecode"] + ".csv"
 
-        # インターネット接続サービスのグラフを表示
+        # グラフを表示
         cb.drow_graph( nodeinfo["servicecode"], nodeinfo["customercode"] )
-        # インターネット接続サービスのグラフ条件の変更
+        # グラフ条件の変更
         cb.change_graph_options( start_date, end_date )
-        # インターネット接続サービスのグラフ保存
-        cb.download_graph( "./" + pngfile )
-        # インターネット接続サービスのCSV保存
-        cb.download_csv( "./CSV/" + csvfile ) 
+        # グラフ保存
+        cb.download_graph( "./outputs/" + pngfile )
+        # グラフ元データ保存
+        cb.download_csv( "./outputs/CSV/" + csvfile ) 
 
-    # IIJ Service Onlineの終了
+    # ブラウザ終了
     cb.close()
