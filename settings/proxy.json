@@ -1,0 +1,6 @@
+{
+    "PROXY_HOST" : "PROXY_HOST",
+    "PROXY_PORT" : "PROXY_PORT",
+    "PROXY_USER" : "PROXY_ID",
+    "PROXY_PASS" : "PROXY_PASS"
+}

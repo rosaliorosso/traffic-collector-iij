@@ -1,0 +1,9 @@
+{
+    "nodelist" : [
+        {
+            "servicecode": "ipXXXXXXX",
+            "customercode": "SGHYYYYYY",
+            "bandwidth": "100M"
+        }
+    ]
+}
